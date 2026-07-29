@@ -1,0 +1,8 @@
+{
+  "versionCode": 2,
+  "versionName": "1.1.0",
+  "apkUrl": "https://your-domain.com/downloads/bill_collector_v1.1.0.apk",
+  "releaseNotes": "নতুন আপডেট পেয়ে সুবিধা নিন:\n- অটোমেটিক ইন-অ্যাপ ইনস্টলেশন সুবিধা\n- ডাটা সিঙ্কিং পারফরম্যান্স উন্নত\n- বাগ ফিক্স ও স্পিড অপটিমাইজেশন",
+  "forceUpdate": false,
+  "oneSignalAppId": "YOUR_ONESIGNAL_APP_ID_HERE"
+}

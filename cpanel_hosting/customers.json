@@ -1,0 +1,28 @@
+[
+  {
+    "id": "cust-1",
+    "customerId": "ISP-1001",
+    "name": "রহিম আহমেদ",
+    "mobileNumber": "+8801712345678",
+    "altMobileNumber": "+8801812345678",
+    "address": "বাসা ১২, রোড ৫, ব্লক সি",
+    "area": "গুলশান",
+    "connectionStatus": "ACTIVE",
+    "packageName": "২০ এমবিপিএস স্ট্যান্ডার্ড",
+    "packageSpeedMbps": 20,
+    "monthlyBill": 800.0,
+    "installationCharge": 1000.0,
+    "connectionDate": 1720000000000,
+    "billingDate": 5,
+    "expireDate": 1722600000000,
+    "lastPaymentDate": 1720000000000,
+    "nextPaymentDate": 1722600000000,
+    "dueAmount": 0.0,
+    "advanceAmount": 0.0,
+    "discount": 0.0,
+    "remarks": "ভিআইপি কাস্টমার - ফাইবার কানেকশন",
+    "photoUri": null,
+    "createdAt": 1720000000000,
+    "updatedAt": 1720000000000
+  }
+]

@@ -1,0 +1,6 @@
+{
+  "name": "বিল কালেক্টর",
+  "description": "Offline-first ISP billing and customer management app with cPanel REST sync and email user sign in.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
