@@ -1,56 +1,82 @@
 <?php
-/**
- * ISP Bill Collector - cPanel REST Sync API
- * 
- * Upload this file (api.php) to your cPanel hosting folder (e.g. public_html/api/api.php)
- * Make sure the folder is writable (permissions 755 or 777) so PHP can write JSON files.
- */
-
-header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
-
-// Handle pre-flight CORS requests
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit;
-}
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Content-Type: application/json; charset=UTF-8");
 
 $request_uri = $_SERVER['REQUEST_URI'];
+$method = $_SERVER['REQUEST_METHOD'];
+
+// File paths
+$customersFile = __DIR__ . '/customers.json';
+$packagesFile = __DIR__ . '/packages.json';
+$paymentsFile = __DIR__ . '/payments.json';
+$syncFullFile = __DIR__ . '/sync_full.json';
+$versionFile = __DIR__ . '/version.json';
+
+// Initialize files if not exist
+if (!file_exists($versionFile)) {
+    file_put_contents($versionFile, json_encode([
+        "versionCode" => 2,
+        "versionName" => "1.1.0",
+        "apkUrl" => "https://your-domain.com/downloads/app-release.apk",
+        "releaseNotes" => "নতুন আপডেট ভার্সন!",
+        "forceUpdate" => false,
+        "oneSignalAppId" => "YOUR_ONESIGNAL_APP_ID_HERE"
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+}
+
+// Endpoint handling
+if (strpos($request_uri, 'version.json') !== false) {
+    if ($method === 'GET') {
+        echo file_get_contents($versionFile);
+        exit;
+    }
+}
 
 if (strpos($request_uri, 'customers.json') !== false) {
-    $file = 'customers.json';
-} elseif (strpos($request_uri, 'packages.json') !== false) {
-    $file = 'packages.json';
-} elseif (strpos($request_uri, 'payments.json') !== false) {
-    $file = 'payments.json';
-} else {
-    $file = 'sync_full.json';
+    if ($method === 'GET') {
+        echo file_exists($customersFile) ? file_get_contents($customersFile) : json_encode([]);
+        exit;
+    } elseif ($method === 'POST') {
+        $input = file_get_contents('php://input');
+        file_put_contents($customersFile, $input);
+        echo json_encode(["status" => "success", "message" => "Customers saved successfully", "synced_timestamp" => time() * 1000]);
+        exit;
+    }
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    if (file_exists($file)) {
-        echo file_get_contents($file);
-    } else {
-        echo json_encode([]);
+if (strpos($request_uri, 'packages.json') !== false) {
+    if ($method === 'GET') {
+        echo file_exists($packagesFile) ? file_get_contents($packagesFile) : json_encode([]);
+        exit;
+    } elseif ($method === 'POST') {
+        $input = file_get_contents('php://input');
+        file_put_contents($packagesFile, $input);
+        echo json_encode(["status" => "success", "message" => "Packages saved successfully", "synced_timestamp" => time() * 1000]);
+        exit;
     }
-} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $input = file_get_contents('php://input');
-    if (!empty($input)) {
-        file_put_contents($file, $input);
-        echo json_encode([
-            "success" => true,
-            "message" => "Data synced successfully to cPanel server file ($file)",
-            "timestamp" => time()
-        ]);
-    } else {
-        echo json_encode([
-            "success" => false,
-            "message" => "No JSON payload provided in request body"
-        ]);
-    }
-} else {
-    echo json_encode(["error" => "Method not supported"]);
 }
+
+if (strpos($request_uri, 'payments.json') !== false) {
+    if ($method === 'GET') {
+        echo file_exists($paymentsFile) ? file_get_contents($paymentsFile) : json_encode([]);
+        exit;
+    } elseif ($method === 'POST') {
+        $input = file_get_contents('php://input');
+        file_put_contents($paymentsFile, $input);
+        echo json_encode(["status" => "success", "message" => "Payments saved successfully", "synced_timestamp" => time() * 1000]);
+        exit;
+    }
+}
+
+if (strpos($request_uri, 'sync_full.json') !== false) {
+    if ($method === 'POST') {
+        $input = file_get_contents('php://input');
+        file_put_contents($syncFullFile, $input);
+        echo json_encode(["status" => "success", "message" => "Full sync saved successfully", "synced_timestamp" => time() * 1000]);
+        exit;
+    }
+}
+
+echo json_encode(["status" => "error", "message" => "Invalid endpoint"]);
 ?>

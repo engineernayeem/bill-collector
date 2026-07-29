@@ -1,17 +1,1 @@
-[
-  {
-    "id": "pay-101",
-    "customerId": "cust-1",
-    "customerName": "রহিম আহমেদ",
-    "amount": 800.0,
-    "previousDue": 800.0,
-    "currentBill": 800.0,
-    "remainingDue": 0.0,
-    "paymentDate": 1720000000000,
-    "paymentMethod": "Bkash",
-    "paymentNote": "জুলাই মাসের বিল পরিশোধিত",
-    "receiptNumber": "REC-88201",
-    "createdAt": 1720000000000,
-    "updatedAt": 1720000000000
-  }
-]
+[]
