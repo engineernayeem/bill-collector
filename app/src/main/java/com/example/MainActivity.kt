@@ -140,12 +140,14 @@ fun MainAppNavHost(viewModel: IspViewModel) {
             composable(Screen.Dashboard.route) {
                 val stats by viewModel.dashboardStats.collectAsStateWithLifecycle()
                 val recentCustomers by viewModel.filteredCustomers.collectAsStateWithLifecycle()
+                val bannerAds by viewModel.bannerAds.collectAsStateWithLifecycle()
                 val isSyncing by viewModel.isSyncing.collectAsStateWithLifecycle()
 
                 DashboardScreen(
                     userEmail = settingsState.userEmail,
                     stats = stats,
                     recentCustomers = recentCustomers,
+                    bannerAds = bannerAds,
                     isSyncing = isSyncing,
                     onNavigateToAddCustomer = { navController.navigate("add_edit_customer") },
                     onNavigateToCustomers = { navController.navigate(Screen.Customers.route) },
@@ -160,6 +162,7 @@ fun MainAppNavHost(viewModel: IspViewModel) {
 
             composable(Screen.Customers.route) {
                 val customers by viewModel.filteredCustomers.collectAsStateWithLifecycle()
+                val bannerAds by viewModel.bannerAds.collectAsStateWithLifecycle()
                 val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
                 val selectedStatus by viewModel.selectedStatus.collectAsStateWithLifecycle()
                 val selectedArea by viewModel.selectedArea.collectAsStateWithLifecycle()
@@ -167,6 +170,7 @@ fun MainAppNavHost(viewModel: IspViewModel) {
 
                 CustomerListScreen(
                     customers = customers,
+                    bannerAds = bannerAds,
                     searchQuery = searchQuery,
                     onSearchQueryChange = { viewModel.onSearchQueryChange(it) },
                     selectedStatus = selectedStatus,
@@ -289,7 +293,24 @@ fun MainAppNavHost(viewModel: IspViewModel) {
                     onExportJson = { onResult -> viewModel.exportJsonData(onResult) },
                     onImportJson = { json, onResult -> viewModel.importJsonData(json, onResult) },
                     onClearSyncMessage = { viewModel.clearSyncMessage() },
-                    onCheckUpdate = { viewModel.checkForAppUpdate() }
+                    onCheckUpdate = { viewModel.checkForAppUpdate() },
+                    onNavigateToLogin = { navController.navigate("login") }
+                )
+            }
+
+            composable("login") {
+                val settings by viewModel.settingsState.collectAsStateWithLifecycle()
+                LoginScreen(
+                    currentSavedEmail = settings.userEmail,
+                    onEmailLogin = { email, _ ->
+                        viewModel.updateSettings(settings.copy(userEmail = email))
+                        true
+                    },
+                    onSuccessLogin = {
+                        navController.navigate(Screen.Dashboard.route) {
+                            popUpTo("login") { inclusive = true }
+                        }
+                    }
                 )
             }
         }

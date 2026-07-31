@@ -34,7 +34,8 @@ fun SettingsScreen(
     onExportJson: ((String) -> Unit) -> Unit,
     onImportJson: (String, (Boolean) -> Unit) -> Unit,
     onClearSyncMessage: () -> Unit,
-    onCheckUpdate: () -> Unit = {}
+    onCheckUpdate: () -> Unit = {},
+    onNavigateToLogin: () -> Unit = {}
 ) {
     val context = LocalContext.current
 
@@ -80,6 +81,64 @@ fun SettingsScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            // Google Account Card
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("গুগল ও ব্যবহারকারী অ্যাকাউন্ট", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                            AssistChip(
+                                onClick = onNavigateToLogin,
+                                label = { Text("সাইন-ইন / পরিবর্তন", fontSize = 11.sp, fontWeight = FontWeight.Bold) },
+                                leadingIcon = { Icon(Icons.Default.AccountCircle, contentDescription = null, tint = PrimaryBlue, modifier = Modifier.size(16.dp)) }
+                            )
+                        }
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(Icons.Default.Email, contentDescription = null, tint = PrimaryBlue, modifier = Modifier.size(20.dp))
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Column {
+                                Text(
+                                    text = "বর্তমান অ্যাক্টিভ ইমেইল:",
+                                    fontSize = 11.sp,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Text(
+                                    text = settings.userEmail.ifBlank { "nayeemmallik801@gmail.com" },
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                        }
+
+                        OutlinedButton(
+                            onClick = onNavigateToLogin,
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(10.dp)
+                        ) {
+                            Icon(Icons.Default.AccountCircle, contentDescription = null, modifier = Modifier.size(18.dp))
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Google Auth দিয়ে নতুন ইমেইলে সাইন-ইন করুন")
+                        }
+                    }
+                }
+            }
+
             // Server & Sync Card
             item {
                 Card(

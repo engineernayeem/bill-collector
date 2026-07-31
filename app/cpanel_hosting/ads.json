@@ -1,0 +1,18 @@
+[
+  {
+    "id": "ad_1",
+    "title": "বিশেষ প্রোমো অফার",
+    "imageUrl": "https://i.postimg.cc/mD8N0x5P/banner-promo.gif",
+    "targetUrl": "https://your-domain.com/offer",
+    "active": true,
+    "position": "dashboard"
+  },
+  {
+    "id": "ad_2",
+    "title": "স্পনসর বিজ্ঞাপন",
+    "imageUrl": "https://i.postimg.cc/0jXqQ6v3/sponsor-banner.png",
+    "targetUrl": "https://your-domain.com/sponsor",
+    "active": true,
+    "position": "customer_list"
+  }
+]

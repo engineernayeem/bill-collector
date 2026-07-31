@@ -10,6 +10,7 @@ import com.example.data.models.PackageEntity
 import com.example.data.models.PaymentEntity
 import com.example.data.models.SettingsEntity
 import com.example.data.remote.AppVersionDto
+import com.example.data.remote.BannerAdDto
 import com.example.data.repository.IspRepository
 import com.example.notifications.OneSignalManager
 import com.example.utils.AppUpdateInstaller
@@ -51,6 +52,10 @@ class IspViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _isLocked = MutableStateFlow(false)
     val isLocked: StateFlow<Boolean> = _isLocked.asStateFlow()
+
+    // Banner Ads State
+    private val _bannerAds = MutableStateFlow<List<BannerAdDto>>(emptyList())
+    val bannerAds: StateFlow<List<BannerAdDto>> = _bannerAds.asStateFlow()
 
     // App Update States
     private val _updateAvailable = MutableStateFlow<AppVersionDto?>(null)
@@ -114,12 +119,23 @@ class IspViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
         checkForAppUpdate()
+        loadBannerAds()
+    }
+
+    fun loadBannerAds() {
+        viewModelScope.launch {
+            val ads = repository.fetchBannerAds()
+            _bannerAds.value = ads
+        }
     }
 
     fun checkForAppUpdate() {
         viewModelScope.launch {
             val serverVersion = repository.checkAppVersion()
             if (serverVersion != null) {
+                if (serverVersion.bannerAds.isNotEmpty()) {
+                    _bannerAds.value = serverVersion.bannerAds
+                }
                 if (serverVersion.oneSignalAppId.isNotBlank()) {
                     val settings = repository.settingsFlow.first() ?: SettingsEntity()
                     if (settings.oneSignalAppId != serverVersion.oneSignalAppId) {
@@ -233,6 +249,7 @@ class IspViewModel(application: Application) : AndroidViewModel(application) {
             val result = repository.syncWithServer()
             _syncMessage.value = result
             _isSyncing.value = false
+            loadBannerAds()
         }
     }
 

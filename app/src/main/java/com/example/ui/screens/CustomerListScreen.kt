@@ -17,12 +17,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.data.models.CustomerEntity
+import com.example.data.remote.BannerAdDto
+import com.example.ui.components.BannerAdCard
 import com.example.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomerListScreen(
     customers: List<CustomerEntity>,
+    bannerAds: List<BannerAdDto> = emptyList(),
     searchQuery: String,
     onSearchQueryChange: (String) -> Unit,
     selectedStatus: String?,
@@ -136,6 +139,16 @@ fun CustomerListScreen(
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
+                    if (bannerAds.isNotEmpty()) {
+                        item {
+                            BannerAdCard(
+                                ads = bannerAds,
+                                position = "customer_list",
+                                modifier = Modifier.padding(bottom = 6.dp)
+                            )
+                        }
+                    }
+
                     items(customers) { customer ->
                         CustomerCardItemBangla(
                             customer = customer,

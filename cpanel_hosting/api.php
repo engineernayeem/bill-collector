@@ -12,8 +12,21 @@ $packagesFile = __DIR__ . '/packages.json';
 $paymentsFile = __DIR__ . '/payments.json';
 $syncFullFile = __DIR__ . '/sync_full.json';
 $versionFile = __DIR__ . '/version.json';
+$adsFile = __DIR__ . '/ads.json';
 
 // Initialize files if not exist
+if (!file_exists($adsFile)) {
+    file_put_contents($adsFile, json_encode([
+        [
+            "id" => "ad_1",
+            "title" => "বিশেষ অফার",
+            "imageUrl" => "https://i.postimg.cc/mD8N0x5P/banner-promo.gif",
+            "targetUrl" => "https://your-domain.com",
+            "active" => true,
+            "position" => "dashboard"
+        ]
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+}
 if (!file_exists($versionFile)) {
     file_put_contents($versionFile, json_encode([
         "versionCode" => 2,
@@ -29,6 +42,18 @@ if (!file_exists($versionFile)) {
 if (strpos($request_uri, 'version.json') !== false) {
     if ($method === 'GET') {
         echo file_get_contents($versionFile);
+        exit;
+    }
+}
+
+if (strpos($request_uri, 'ads.json') !== false) {
+    if ($method === 'GET') {
+        echo file_exists($adsFile) ? file_get_contents($adsFile) : json_encode([]);
+        exit;
+    } elseif ($method === 'POST') {
+        $input = file_get_contents('php://input');
+        file_put_contents($adsFile, $input);
+        echo json_encode(["status" => "success", "message" => "Ads saved successfully"]);
         exit;
     }
 }

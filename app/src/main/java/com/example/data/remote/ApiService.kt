@@ -27,4 +27,7 @@ interface ApiService {
 
     @GET("version.json")
     suspend fun getAppVersion(): Response<AppVersionDto>
+
+    @GET("ads.json")
+    suspend fun getBannerAds(): Response<List<BannerAdDto>>
 }

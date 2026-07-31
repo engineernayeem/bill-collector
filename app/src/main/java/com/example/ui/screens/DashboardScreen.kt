@@ -27,6 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.R
 import com.example.data.models.CustomerEntity
+import com.example.data.remote.BannerAdDto
+import com.example.ui.components.BannerAdCard
 import com.example.ui.theme.*
 import com.example.ui.viewmodel.DashboardStats
 import com.example.utils.CurrencyUtils
@@ -37,6 +39,7 @@ fun DashboardScreen(
     userEmail: String = "nayeemmallik801@gmail.com",
     stats: DashboardStats,
     recentCustomers: List<CustomerEntity>,
+    bannerAds: List<BannerAdDto> = emptyList(),
     isSyncing: Boolean,
     onNavigateToAddCustomer: () -> Unit,
     onNavigateToCustomers: () -> Unit,
@@ -164,6 +167,16 @@ fun DashboardScreen(
                             }
                         }
                     }
+                }
+            }
+
+            // Server JSON Banner Ad (GIF / Image support)
+            if (bannerAds.isNotEmpty()) {
+                item {
+                    BannerAdCard(
+                        ads = bannerAds,
+                        position = "dashboard"
+                    )
                 }
             }
 

@@ -275,6 +275,47 @@ class IspRepository(private val context: Context) {
         }
         null
     }
+
+    suspend fun fetchBannerAds(): List<BannerAdDto> = withContext(Dispatchers.IO) {
+        val settings = settingsDao.getSettings() ?: SettingsEntity()
+        var baseUrl = settings.serverUrl.trim()
+        if (baseUrl.isBlank()) return@withContext emptyList()
+        if (!baseUrl.endsWith("/")) baseUrl += "/"
+
+        try {
+            val logging = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC }
+            val okHttpClient = OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .addInterceptor(logging)
+                .build()
+
+            val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+
+            val retrofit = Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .client(okHttpClient)
+                .addConverterFactory(MoshiConverterFactory.create(moshi))
+                .build()
+
+            val apiService = retrofit.create(ApiService::class.java)
+
+            // 1. Try version.json bannerAds first
+            val versionResponse = apiService.getAppVersion()
+            if (versionResponse.isSuccessful && versionResponse.body()?.bannerAds?.isNotEmpty() == true) {
+                return@withContext versionResponse.body()!!.bannerAds
+            }
+
+            // 2. Try ads.json
+            val adsResponse = apiService.getBannerAds()
+            if (adsResponse.isSuccessful && adsResponse.body() != null) {
+                return@withContext adsResponse.body()!!
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        emptyList()
+    }
 }
 
 // Extension Mappers

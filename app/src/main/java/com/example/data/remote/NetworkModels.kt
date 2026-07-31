@@ -76,11 +76,22 @@ data class SyncResponseDto(
 )
 
 @JsonClass(generateAdapter = true)
+data class BannerAdDto(
+    @Json(name = "id") val id: String = "1",
+    @Json(name = "title") val title: String = "",
+    @Json(name = "imageUrl") val imageUrl: String = "",
+    @Json(name = "targetUrl") val targetUrl: String = "",
+    @Json(name = "active") val active: Boolean = true,
+    @Json(name = "position") val position: String = "dashboard"
+)
+
+@JsonClass(generateAdapter = true)
 data class AppVersionDto(
     @Json(name = "versionCode") val versionCode: Int = 1,
     @Json(name = "versionName") val versionName: String = "1.0.0",
     @Json(name = "apkUrl") val apkUrl: String = "",
     @Json(name = "releaseNotes") val releaseNotes: String = "",
     @Json(name = "forceUpdate") val forceUpdate: Boolean = false,
-    @Json(name = "oneSignalAppId") val oneSignalAppId: String = ""
+    @Json(name = "oneSignalAppId") val oneSignalAppId: String = "",
+    @Json(name = "bannerAds") val bannerAds: List<BannerAdDto> = emptyList()
 )
